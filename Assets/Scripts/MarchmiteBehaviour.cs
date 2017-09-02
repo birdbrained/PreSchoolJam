@@ -34,6 +34,7 @@ public class MarchmiteBehaviour : MonoBehaviour
 			currentPower = value;
 		}
 	}
+	private bool usingJump = false;
 
 	// Use this for initialization
 	void Start() 
@@ -54,7 +55,20 @@ public class MarchmiteBehaviour : MonoBehaviour
 		case SpecialPower.JUMP:
 			//Debug.Log("Jumping");
 			//***TO DO*** Make all mites in radius jump
-			rb.AddForce(new Vector2(0, 500));
+			Collider2D[] hitColliders = Physics2D.OverlapCircleAll(new Vector2(transform.position.x, transform.position.y), 3.0f);
+			foreach (Collider2D hit in hitColliders)
+			{
+				if (hit.gameObject.tag == "mite")
+				{
+					MarchmiteBehaviour mite = hit.gameObject.GetComponent<MarchmiteBehaviour>();
+					if (mite.isGrounded)
+					{
+						mite.GetComponent<Rigidbody2D>().AddForce(new Vector2(0, 500));
+						//hit.collider.gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(0, 500));
+						mite.usingJump = true;
+					}
+				}
+			}
 			break;
 		case SpecialPower.UNFURL:
 			Debug.Log("Unfurling");
@@ -89,7 +103,7 @@ public class MarchmiteBehaviour : MonoBehaviour
 	void Update() 
 	{
 		ColorManagement();
-		if (isGrounded) 
+		if (isGrounded || usingJump) 
 		{
 			//transform.Translate(Vector3.forward * Time.deltaTime);
 			if (isFacingRight)
@@ -103,19 +117,12 @@ public class MarchmiteBehaviour : MonoBehaviour
 		}
 	}
 
-	void CheckIfGrounded()
-	{
-		Vector2 below = transform.TransformDirection(Vector2.down);
-		if (Physics.Raycast(transform.position, below, 0.1f))
-		{
-			isGrounded = true;
-		} else
-			isGrounded = false;
-	}
-
 	void FixedUpdate()
 	{
-		//CheckIfGrounded();
+		if (rb.velocity.y < 0.0f)
+		{
+			isGrounded = false;
+		}
 	}
 
 	void OnCollisionEnter2D(Collision2D other)
@@ -141,6 +148,7 @@ public class MarchmiteBehaviour : MonoBehaviour
 			if (Vector2.Dot(c.normal, Vector2.up) > 0.5)
 			{
 				isGrounded = true;
+				usingJump = false;
 			}
 			if (Mathf.Abs(Vector2.Dot(c.normal, Vector2.right)) > 0.5)
 			{
@@ -155,5 +163,15 @@ public class MarchmiteBehaviour : MonoBehaviour
 			isGrounded = false;
 		else if (other.gameObject.tag == "wall")
 			isGrounded = true;*/
+	}
+
+	void OnTriggerEnter2D(Collider2D other)
+	{
+		if (other.gameObject.tag == "goal")
+		{
+			GameManager.MitesSaved++;
+			GameManager.Instance.mitesAlive--;
+			Destroy(gameObject);
+		}
 	}
 }

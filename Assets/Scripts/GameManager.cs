@@ -25,9 +25,33 @@ public class GameManager : MonoBehaviour
 	private Text mitesNeededText;		//text to show the min. mites needed to clear the level
 	public int mitesNeeded;				//int number of mites needed to clear the level
 	public int totalMites;				//the total number of mites that will spawn in a level
-	private int mitesSaved;				//int counter of mites that have reached the finish
+	[SerializeField]
+	private Text mitesSavedText;
+	private static int mitesSaved;		//int counter of mites that have reached the finish
+	public static int MitesSaved
+	{
+		get
+		{
+			return mitesSaved;
+		}
+		set
+		{
+			mitesSaved = value;
+		}
+	}
 	[SerializeField]
 	private Text miteDescriptionText;	//text to show the status of a selected mite
+	public Text MiteDescriptionText
+	{
+		get
+		{
+			return miteDescriptionText;
+		}
+		set
+		{
+			miteDescriptionText = value;
+		}
+	}
 
 	public int activePowerup = 0;
 	public bool powerupSelected = false;
@@ -42,6 +66,8 @@ public class GameManager : MonoBehaviour
 			mitesNeededText.text = "Needed: " + mitesNeeded.ToString();
 		if (miteDescriptionText != null)
 			miteDescriptionText.text = "whee";
+		if (mitesSavedText != null)
+			mitesSavedText.text = "Saved: " + mitesSaved.ToString();
 	}
 
 	void CheckMouseClick()
@@ -61,6 +87,7 @@ public class GameManager : MonoBehaviour
 					{
 						//If the mite has a power, execute it
 						//If the mite does not have a power but one is currently selected, give the mite the power
+						miteDescriptionText.text = mite.CurrentPower.ToString();
 						if (mite.CurrentPower != MarchmiteBehaviour.SpecialPower.NONE)
 						{
 							mite.ExecutePower(mite.CurrentPower);
@@ -80,8 +107,8 @@ public class GameManager : MonoBehaviour
 	{
 		if (mitesAliveText != null)
 			mitesAliveText.text = "Alive: " + mitesAlive.ToString();
-		if (miteDescriptionText != null)
-			miteDescriptionText.text = "whee";
+		if (mitesSavedText != null)
+			mitesSavedText.text = "Saved: " + mitesSaved.ToString();
 		CheckMouseClick();
 	}
 
