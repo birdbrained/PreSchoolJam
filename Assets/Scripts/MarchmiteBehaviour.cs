@@ -5,6 +5,7 @@ using UnityEngine;
 public class MarchmiteBehaviour : MonoBehaviour 
 {
 	private Rigidbody2D rb;
+	private Collider2D coll;
 	[SerializeField]
 	protected float speed;
 	protected bool isFacingRight = true;
@@ -37,6 +38,7 @@ public class MarchmiteBehaviour : MonoBehaviour
 		//rightCollider = transform.Find("rightCollider").GetComponent<BoxCollider2D>();
 		//leftCollider = transform.Find("leftCollider").GetComponent<BoxCollider2D>();
 		rb = GetComponent<Rigidbody2D>();
+		coll = GetComponent<Collider2D>();
 	}
 
 	void ExecutePower(SpecialPower power)
@@ -84,17 +86,19 @@ public class MarchmiteBehaviour : MonoBehaviour
 	void OnCollisionEnter2D(Collision2D other)
 	{
 		Debug.Log("Other's tag: " + other.gameObject.tag);
+		Collider2D otherCol = other.gameObject.GetComponent<Collider2D>();
 		//if (other.gameObject.tag == "wall")
 			//isFacingRight = !isFacingRight;
 		//else if (other.gameObject.tag == "floor")
 			//isGrounded = true;
 		if (other.gameObject.tag == "mite")
 		{
-			Physics2D.IgnoreCollision(other.gameObject.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+			Physics2D.IgnoreCollision(otherCol, coll);
 		}
-		else if (other.gameObject.tag == "step")
+		else if (transform.position.y >= other.gameObject.transform.position.y + (otherCol.bounds.size.y / 2 - coll.bounds.size.y / 2) &&
+			(transform.position.x + coll.bounds.size.x / 2 < other.gameObject.transform.position.x - otherCol.bounds.size.x / 2 || transform.position.x - coll.bounds.size.x / 2 > other.gameObject.transform.position.x + otherCol.bounds.size.x / 2))
 		{
-			transform.position = new Vector3(transform.position.x, transform.position.y + other.gameObject.GetComponent<Collider2D>().bounds.size.y, transform.position.z);
+			transform.position = new Vector3(transform.position.x, transform.position.y + coll.bounds.size.y / 2, transform.position.z);
 		}
 		else if (other.contacts.Length > 0)
 		{
