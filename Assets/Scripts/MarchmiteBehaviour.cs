@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MarchmiteBehaviour : MonoBehaviour 
 {
+	private Rigidbody2D rb;
 	[SerializeField]
 	protected float speed;
 	protected bool isFacingRight = true;
@@ -11,12 +12,41 @@ public class MarchmiteBehaviour : MonoBehaviour
 	//private Collider2D rightCollider;
 	//private Collider2D leftCollider;
 
+	public enum SpecialPower
+	{
+		NONE,
+		JUMP,
+		UNFURL
+	};
+	private SpecialPower currentPower = SpecialPower.NONE;
+	public SpecialPower CurrentPower
+	{
+		get
+		{
+			return currentPower;
+		}
+		set
+		{
+			currentPower = value;
+		}
+	}
 
 	// Use this for initialization
 	void Start() 
 	{
 		//rightCollider = transform.Find("rightCollider").GetComponent<BoxCollider2D>();
 		//leftCollider = transform.Find("leftCollider").GetComponent<BoxCollider2D>();
+		rb = GetComponent<Rigidbody2D>();
+	}
+
+	void ExecutePower(SpecialPower power)
+	{
+		//Debug.Log("Power: " + power);
+		if (power == SpecialPower.JUMP)
+		{
+			//Debug.Log("Jumping");
+			rb.AddForce(new Vector2(0, 500));
+		}
 	}
 	
 	// Update is called once per frame
@@ -36,9 +66,19 @@ public class MarchmiteBehaviour : MonoBehaviour
 		}
 	}
 
+	void CheckIfGrounded()
+	{
+		Vector2 below = transform.TransformDirection(Vector2.down);
+		if (Physics.Raycast(transform.position, below, 0.1f))
+		{
+			isGrounded = true;
+		} else
+			isGrounded = false;
+	}
+
 	void FixedUpdate()
 	{
-		
+		//CheckIfGrounded();
 	}
 
 	void OnCollisionEnter2D(Collision2D other)
@@ -48,7 +88,15 @@ public class MarchmiteBehaviour : MonoBehaviour
 			//isFacingRight = !isFacingRight;
 		//else if (other.gameObject.tag == "floor")
 			//isGrounded = true;
-		if (other.contacts.Length > 0)
+		if (other.gameObject.tag == "mite")
+		{
+			Physics2D.IgnoreCollision(other.gameObject.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+		}
+		else if (other.gameObject.tag == "step")
+		{
+			transform.position = new Vector3(transform.position.x, transform.position.y + other.gameObject.GetComponent<Collider2D>().bounds.size.y, transform.position.z);
+		}
+		else if (other.contacts.Length > 0)
 		{
 			ContactPoint2D c = other.contacts[0];
 			if (Vector2.Dot(c.normal, Vector2.up) > 0.5)
