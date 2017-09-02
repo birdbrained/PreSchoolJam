@@ -6,12 +6,15 @@ public class MarchmiteBehaviour : MonoBehaviour
 {
 	private Rigidbody2D rb;
 	private Collider2D coll;
+	private SpriteRenderer rend;
 	[SerializeField]
 	protected float speed;
 	protected bool isFacingRight = true;
 	private bool isGrounded = false;
 	//private Collider2D rightCollider;
 	//private Collider2D leftCollider;
+	[SerializeField]
+	private GameObject unfurlPlatformObj;
 
 	public enum SpecialPower
 	{
@@ -39,8 +42,10 @@ public class MarchmiteBehaviour : MonoBehaviour
 		//leftCollider = transform.Find("leftCollider").GetComponent<BoxCollider2D>();
 		rb = GetComponent<Rigidbody2D>();
 		coll = GetComponent<Collider2D>();
+		rend = GetComponent<SpriteRenderer>();
 	}
 
+	//Execute the power within
 	public void ExecutePower(SpecialPower power)
 	{
 		//Debug.Log("Power: " + power);
@@ -48,21 +53,42 @@ public class MarchmiteBehaviour : MonoBehaviour
 		{
 		case SpecialPower.JUMP:
 			//Debug.Log("Jumping");
+			//***TO DO*** Make all mites in radius jump
 			rb.AddForce(new Vector2(0, 500));
 			break;
 		case SpecialPower.UNFURL:
 			Debug.Log("Unfurling");
+			GameObject platform = (GameObject)Instantiate(unfurlPlatformObj, new Vector3(isFacingRight ? transform.position.x + 3 : transform.position.x - 3, transform.position.y - coll.bounds.size.y / 2), Quaternion.identity);
+			GameManager.Instance.mitesAlive--;
+			Destroy(gameObject);
 			break;
 		default:
 			Debug.Log("No power!");
 			break;
 		}
+	}
 
+	//Dirty way of changing the mite's color. Probably should delete this later.
+	void ColorManagement()
+	{
+		switch (currentPower)
+		{
+		case SpecialPower.JUMP:
+			rend.color = Color.yellow;
+			break;
+		case SpecialPower.UNFURL:
+			rend.color = Color.magenta;
+			break;
+		default:
+			rend.color = Color.white;
+			break;
+		}
 	}
 	
 	// Update is called once per frame
 	void Update() 
 	{
+		ColorManagement();
 		if (isGrounded) 
 		{
 			//transform.Translate(Vector3.forward * Time.deltaTime);

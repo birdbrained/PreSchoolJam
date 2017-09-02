@@ -29,7 +29,9 @@ public class GameManager : MonoBehaviour
 	[SerializeField]
 	private Text miteDescriptionText;	//text to show the status of a selected mite
 
-	private int activePowerup = 1;
+	public int activePowerup = 0;
+	public bool powerupSelected = false;
+	public int[] powerupInventory;
 
 	// Use this for initialization
 	void Start() 
@@ -57,7 +59,16 @@ public class GameManager : MonoBehaviour
 					MarchmiteBehaviour mite = hit.collider.gameObject.GetComponent<MarchmiteBehaviour>();
 					if (mite != null)
 					{
-						mite.ExecutePower(mite.CurrentPower);
+						//If the mite has a power, execute it
+						//If the mite does not have a power but one is currently selected, give the mite the power
+						if (mite.CurrentPower != MarchmiteBehaviour.SpecialPower.NONE)
+						{
+							mite.ExecutePower(mite.CurrentPower);
+						} 
+						else if (powerupSelected)
+						{
+							mite.CurrentPower = (MarchmiteBehaviour.SpecialPower)activePowerup;
+						}
 					}
 				}
 			}
@@ -76,7 +87,20 @@ public class GameManager : MonoBehaviour
 
 	public void ChangeActivePowerup(int i)
 	{
-		activePowerup = i;
+		if (activePowerup == i)
+		{
+			powerupSelected = false;
+			activePowerup = 0;
+		}
+		else if (powerupSelected && activePowerup != i)
+		{
+			activePowerup = i;
+		}
+		else
+		{
+			activePowerup = i;
+			powerupSelected = true;
+		}
 	}
 
 }
