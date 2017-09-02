@@ -15,9 +15,9 @@ public class MarchmiteBehaviour : MonoBehaviour
 
 	public enum SpecialPower
 	{
-		NONE,
-		JUMP,
-		UNFURL
+		NONE = 0,
+		JUMP = 1,
+		UNFURL = 2
 	};
 	private SpecialPower currentPower = SpecialPower.NONE;
 	public SpecialPower CurrentPower
@@ -41,14 +41,23 @@ public class MarchmiteBehaviour : MonoBehaviour
 		coll = GetComponent<Collider2D>();
 	}
 
-	void ExecutePower(SpecialPower power)
+	public void ExecutePower(SpecialPower power)
 	{
 		//Debug.Log("Power: " + power);
-		if (power == SpecialPower.JUMP)
+		switch (power)
 		{
+		case SpecialPower.JUMP:
 			//Debug.Log("Jumping");
 			rb.AddForce(new Vector2(0, 500));
+			break;
+		case SpecialPower.UNFURL:
+			Debug.Log("Unfurling");
+			break;
+		default:
+			Debug.Log("No power!");
+			break;
 		}
+
 	}
 	
 	// Update is called once per frame
@@ -85,7 +94,7 @@ public class MarchmiteBehaviour : MonoBehaviour
 
 	void OnCollisionEnter2D(Collision2D other)
 	{
-		Debug.Log("Other's tag: " + other.gameObject.tag);
+		//Debug.Log("Other's tag: " + other.gameObject.tag);
 		Collider2D otherCol = other.gameObject.GetComponent<Collider2D>();
 		//if (other.gameObject.tag == "wall")
 			//isFacingRight = !isFacingRight;
