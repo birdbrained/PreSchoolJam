@@ -205,6 +205,7 @@ public class GameManager : MonoBehaviour
 			if (totalTime <= 0.0f)
 			{
 				//End the game
+				GameManager.TimerCanCountDown = false;
 				UnityEngine.SceneManagement.SceneManager.LoadScene("Result");
 			}
 		}
@@ -216,6 +217,8 @@ public class GameManager : MonoBehaviour
 		if (mitesAlive <= 0 && totalTime < startingTime - 2)
 		{
 			Debug.Log("Game over");
+			GameManager.TimerCanCountDown = false;
+			UnityEngine.SceneManagement.SceneManager.LoadScene("Result");
 		}
 	}
 

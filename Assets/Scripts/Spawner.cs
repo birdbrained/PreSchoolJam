@@ -6,7 +6,7 @@ public class Spawner : MonoBehaviour
 {
 	[SerializeField]
 	private float spawnDelay;
-	private int mitesCurrentlySpawned;
+	private int mitesCurrentlySpawned = 0;
 	[SerializeField]
 	private GameObject miteObj;
 
@@ -28,6 +28,8 @@ public class Spawner : MonoBehaviour
 
 	private IEnumerator SpawnMites()
 	{
+		yield return new WaitForSeconds(0.5f);
+		Debug.Log(GameManager.TotalMites);
 		while (mitesCurrentlySpawned < GameManager.TotalMites)
 		{
 			mitesCurrentlySpawned++;

@@ -46,6 +46,14 @@ public class MarchmiteBehaviour : MonoBehaviour
 		rend = GetComponent<SpriteRenderer>();
 	}
 
+	void ChangeDirection()
+	{
+		isFacingRight = !isFacingRight;
+		Vector3 scale = transform.localScale;
+		scale.x *= -1;
+		transform.localScale = scale;
+	}
+
 	//Execute the power within
 	public void ExecutePower(SpecialPower power)
 	{
@@ -152,7 +160,7 @@ public class MarchmiteBehaviour : MonoBehaviour
 			}
 			if (Mathf.Abs(Vector2.Dot(c.normal, Vector2.right)) > 0.5)
 			{
-				isFacingRight = !isFacingRight;
+				ChangeDirection();
 			}
 		}
 	}
