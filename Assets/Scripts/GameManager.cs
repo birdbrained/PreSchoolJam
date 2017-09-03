@@ -56,18 +56,22 @@ public class GameManager : MonoBehaviour
 	public int activePowerup = 0;
 	public bool powerupSelected = false;
 	public int[] powerupInventory;
+	[SerializeField]
+	private float totalTime;
+	[SerializeField]
+	private Text timerText;
 
 	// Use this for initialization
 	void Start() 
 	{
 		if (mitesAliveText != null)
-			mitesAliveText.text = "Alive: " + mitesAlive.ToString();
+			mitesAliveText.text = mitesAlive.ToString();
 		if (mitesNeededText != null)
-			mitesNeededText.text = "Needed: " + mitesNeeded.ToString();
+			mitesNeededText.text = "/" + mitesNeeded.ToString();
 		if (miteDescriptionText != null)
 			miteDescriptionText.text = "whee";
 		if (mitesSavedText != null)
-			mitesSavedText.text = "Saved: " + mitesSaved.ToString();
+			mitesSavedText.text = mitesSaved.ToString();
 	}
 
 	void CheckMouseClick()
@@ -106,10 +110,16 @@ public class GameManager : MonoBehaviour
 	void Update() 
 	{
 		if (mitesAliveText != null)
-			mitesAliveText.text = "Alive: " + mitesAlive.ToString();
+			mitesAliveText.text = mitesAlive.ToString();
 		if (mitesSavedText != null)
-			mitesSavedText.text = "Saved: " + mitesSaved.ToString();
+			mitesSavedText.text = mitesSaved.ToString();
 		CheckMouseClick();
+
+		totalTime -= Time.deltaTime;
+		if (totalTime <= 0.0f)
+		{
+			//End the game
+		}
 	}
 
 	public void ChangeActivePowerup(int i)

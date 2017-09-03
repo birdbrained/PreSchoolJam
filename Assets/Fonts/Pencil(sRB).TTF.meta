@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: aa3d34db5dae3e7418c46ecd717bbe0d
+timeCreated: 1504401494
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Pencil (sRB)
+  fontNames:
+  - Pencil (sRB)
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
