@@ -28,7 +28,7 @@ public class Spawner : MonoBehaviour
 
 	private IEnumerator SpawnMites()
 	{
-		while (mitesCurrentlySpawned < GameManager.Instance.totalMites)
+		while (mitesCurrentlySpawned < GameManager.TotalMites)
 		{
 			mitesCurrentlySpawned++;
 			GameManager.Instance.mitesAlive++;
@@ -36,6 +36,8 @@ public class Spawner : MonoBehaviour
 			if (miteObj != null)
 			{
 				GameObject mite = (GameObject)Instantiate(miteObj, new Vector3(transform.position.x, transform.position.y), Quaternion.identity);
+				if (!GameManager.TimerCanCountDown)
+					GameManager.TimerCanCountDown = true;
 			}
 			yield return new WaitForSeconds(2.0f - (spawnDelay * 2));
 		}

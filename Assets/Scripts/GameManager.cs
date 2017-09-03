@@ -23,8 +23,30 @@ public class GameManager : MonoBehaviour
 	public int mitesAlive;				//int counter of how many alive mites
 	[SerializeField]
 	private Text mitesNeededText;		//text to show the min. mites needed to clear the level
-	public int mitesNeeded;				//int number of mites needed to clear the level
-	public int totalMites;				//the total number of mites that will spawn in a level
+	private static int mitesNeeded;		//int number of mites needed to clear the level
+	public static int MitesNeeded
+	{
+		get
+		{
+			return mitesNeeded;
+		}
+		set
+		{
+			mitesNeeded = value;
+		}
+	}
+	private static int totalMites;		//the total number of mites that will spawn in a level
+	public static int TotalMites
+	{
+		get
+		{
+			return totalMites;
+		}
+		set
+		{
+			totalMites = value;
+		}
+	}
 	[SerializeField]
 	private Text mitesSavedText;
 	private static int mitesSaved;		//int counter of mites that have reached the finish
@@ -57,12 +79,59 @@ public class GameManager : MonoBehaviour
 	public bool powerupSelected = false;
 	public int[] powerupInventory;
 	[SerializeField]
-	private float totalTime;
+	private static float totalTime;
+	public static float TotalTime
+	{
+		get
+		{
+			return totalTime;
+		}
+		set
+		{
+			totalTime = value;
+		}
+	}
 	private float startingTime;
 	[SerializeField]
 	private Text timerText;
+	private static bool timerCanCountDown = false;
+	public static bool TimerCanCountDown
+	{
+		get
+		{
+			return timerCanCountDown;
+		}
+		set
+		{
+			timerCanCountDown = value;
+		}
+	}
 	[SerializeField]
 	private GameObject finishButton;
+	private static string levelName;
+	public static string LevelName
+	{
+		get
+		{
+			return levelName;
+		}
+		set
+		{
+			levelName = value;
+		}
+	}
+	private static string levelInfo;
+	public static string LevelInfo
+	{
+		get
+		{
+			return levelInfo;
+		}
+		set
+		{
+			levelInfo = value;
+		}
+	}
 
 	// Use this for initialization
 	void Start() 
@@ -130,10 +199,14 @@ public class GameManager : MonoBehaviour
 			timerText.text = FormatTime();
 		CheckMouseClick();
 
-		totalTime -= Time.deltaTime;
-		if (totalTime <= 0.0f)
+		if (startingTime != 0 && timerCanCountDown)
 		{
-			//End the game
+			totalTime -= Time.deltaTime;
+			if (totalTime <= 0.0f)
+			{
+				//End the game
+				UnityEngine.SceneManagement.SceneManager.LoadScene("Result");
+			}
 		}
 
 		if (MitesSaved >= mitesNeeded)
