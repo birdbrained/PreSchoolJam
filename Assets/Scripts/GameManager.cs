@@ -58,8 +58,11 @@ public class GameManager : MonoBehaviour
 	public int[] powerupInventory;
 	[SerializeField]
 	private float totalTime;
+	private float startingTime;
 	[SerializeField]
 	private Text timerText;
+	[SerializeField]
+	private GameObject finishButton;
 
 	// Use this for initialization
 	void Start() 
@@ -72,6 +75,16 @@ public class GameManager : MonoBehaviour
 			miteDescriptionText.text = "whee";
 		if (mitesSavedText != null)
 			mitesSavedText.text = mitesSaved.ToString();
+		if (finishButton != null)
+			finishButton.SetActive(false);
+		startingTime = totalTime;
+	}
+
+	string FormatTime()
+	{
+		string minutes = Mathf.Floor(totalTime / 60).ToString("00");
+		string seconds = Mathf.Floor(totalTime % 60).ToString("00");
+		return minutes + ":" + seconds;
 	}
 
 	void CheckMouseClick()
@@ -113,12 +126,23 @@ public class GameManager : MonoBehaviour
 			mitesAliveText.text = mitesAlive.ToString();
 		if (mitesSavedText != null)
 			mitesSavedText.text = mitesSaved.ToString();
+		if (timerText != null)
+			timerText.text = FormatTime();
 		CheckMouseClick();
 
 		totalTime -= Time.deltaTime;
 		if (totalTime <= 0.0f)
 		{
 			//End the game
+		}
+
+		if (MitesSaved >= mitesNeeded)
+		{
+			finishButton.SetActive(true);
+		}
+		if (mitesAlive <= 0 && totalTime < startingTime - 2)
+		{
+			Debug.Log("Game over");
 		}
 	}
 
