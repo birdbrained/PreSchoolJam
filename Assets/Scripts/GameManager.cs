@@ -133,6 +133,12 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
+	IEnumerator WaitToStartClock()
+	{
+		yield return new WaitForSeconds(0.1f);
+		startingTime = totalTime;
+	}
+
 	// Use this for initialization
 	void Start() 
 	{
@@ -146,7 +152,7 @@ public class GameManager : MonoBehaviour
 			mitesSavedText.text = mitesSaved.ToString();
 		if (finishButton != null)
 			finishButton.SetActive(false);
-		startingTime = totalTime;
+		StartCoroutine(WaitToStartClock());
 	}
 
 	string FormatTime()
@@ -168,12 +174,14 @@ public class GameManager : MonoBehaviour
 				//Debug.Log(hit.collider.gameObject.name);
 				if (hit.collider.gameObject.tag == "mite")
 				{
+					//Debug.Log("hit a mite");
 					MarchmiteBehaviour mite = hit.collider.gameObject.GetComponent<MarchmiteBehaviour>();
+					//Debug.Log(mite != null);
 					if (mite != null)
 					{
 						//If the mite has a power, execute it
 						//If the mite does not have a power but one is currently selected, give the mite the power
-						miteDescriptionText.text = mite.CurrentPower.ToString();
+						//miteDescriptionText.text = mite.CurrentPower.ToString();
 						if (mite.CurrentPower != MarchmiteBehaviour.SpecialPower.NONE)
 						{
 							mite.ExecutePower(mite.CurrentPower);
@@ -193,10 +201,14 @@ public class GameManager : MonoBehaviour
 	{
 		if (mitesAliveText != null)
 			mitesAliveText.text = mitesAlive.ToString();
+		if (mitesNeededText != null)
+			mitesNeededText.text = "/" + mitesNeeded.ToString();
 		if (mitesSavedText != null)
 			mitesSavedText.text = mitesSaved.ToString();
 		if (timerText != null)
 			timerText.text = FormatTime();
+		if (miteDescriptionText != null)
+			miteDescriptionText.text = ((MarchmiteBehaviour.SpecialPower)activePowerup).ToString();
 		CheckMouseClick();
 
 		if (startingTime != 0 && timerCanCountDown)
@@ -212,7 +224,8 @@ public class GameManager : MonoBehaviour
 
 		if (MitesSaved >= mitesNeeded)
 		{
-			finishButton.SetActive(true);
+			if (finishButton != null)
+				finishButton.SetActive(true);
 		}
 		if (mitesAlive <= 0 && totalTime < startingTime - 2)
 		{
@@ -224,6 +237,7 @@ public class GameManager : MonoBehaviour
 
 	public void ChangeActivePowerup(int i)
 	{
+		Debug.Log("Changing power");
 		if (activePowerup == i)
 		{
 			powerupSelected = false;

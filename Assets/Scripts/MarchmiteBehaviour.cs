@@ -10,6 +10,7 @@ public class MarchmiteBehaviour : MonoBehaviour
 	[SerializeField]
 	protected float speed;
 	protected bool isFacingRight = true;
+	[SerializeField]
 	private bool isGrounded = false;
 	//private Collider2D rightCollider;
 	//private Collider2D leftCollider;
@@ -123,6 +124,11 @@ public class MarchmiteBehaviour : MonoBehaviour
 		{
 			//transform.Translate(Vector3.down * Time.deltaTime * (speed * 1.5f), Space.World);
 		}
+		if (transform.localPosition.y < -20)
+		{
+			GameManager.Instance.mitesAlive--;
+			Destroy(gameObject);
+		}
 	}
 
 	void FixedUpdate()
@@ -130,6 +136,9 @@ public class MarchmiteBehaviour : MonoBehaviour
 		if (rb.velocity.y < 0.0f)
 		{
 			isGrounded = false;
+		} else
+		{
+			isGrounded = true;
 		}
 	}
 
@@ -149,6 +158,7 @@ public class MarchmiteBehaviour : MonoBehaviour
 			(transform.position.x + coll.bounds.size.x / 2 < other.gameObject.transform.position.x - otherCol.bounds.size.x / 2 || transform.position.x - coll.bounds.size.x / 2 > other.gameObject.transform.position.x + otherCol.bounds.size.x / 2))
 		{
 			transform.position = new Vector3(transform.position.x, transform.position.y + coll.bounds.size.y / 2, transform.position.z);
+			isGrounded = true;
 		}
 		else if (other.contacts.Length > 0)
 		{

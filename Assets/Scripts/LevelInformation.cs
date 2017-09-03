@@ -20,6 +20,12 @@ public class LevelInformation : MonoBehaviour
 	[SerializeField]
 	private Text quipText2;
 
+	[SerializeField]
+	private Sprite[] rankingSprites;
+	[SerializeField]
+	private GameObject rankingObj;
+	private Image myImage;
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -33,32 +39,40 @@ public class LevelInformation : MonoBehaviour
 		}
 		else
 		{
-			if (quipText != null && quipText2 != null)
+			myImage = rankingObj.GetComponent<Image>();
+			if (quipText != null && quipText2 != null && rankingSprites.Length >= 5 && myImage != null)
 			{
 				if (GameManager.MitesSaved == GameManager.TotalMites)
 				{
 					quipText.text = "Got 'em all!!!";
 					quipText2.text = "All of the mites are accounted for!";
+					myImage.sprite = rankingSprites[0];
+
 				} else if (GameManager.MitesSaved > GameManager.MitesNeeded)
 				{
 					quipText.text = "Awesome job!";
 					quipText2.text = "It's alright if a few must go, but try to get more next time!";
+					myImage.sprite = rankingSprites[1];
 				} else if (GameManager.MitesSaved == GameManager.MitesNeeded)
 				{
 					quipText.text = "Just barely made it!";
 					quipText2.text = "The mites mourn their losses, but you still pass!";
+					myImage.sprite = rankingSprites[2];
 				} else if (GameManager.MitesSaved == 0)
 				{
 					quipText.text = "ROCK BOTTOM.";
 					quipText2.text = "...I hope for your sake that you threw that level!";
+					myImage.sprite = rankingSprites[4];
 				} else if (GameManager.MitesSaved < GameManager.MitesNeeded)
 				{
 					quipText.text = "Not quite enough...";
 					quipText2.text = levelHint;
+					myImage.sprite = rankingSprites[3];
 				} else
 				{
 					quipText.text = "Wait...";
 					quipText2.text = "This text should not appear. Let me know if it does.";
+					myImage.sprite = rankingSprites[4];
 				}
 			}
 		}
